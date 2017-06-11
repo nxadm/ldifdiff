@@ -1,4 +1,4 @@
-// Package ldiffdiff finds and outputs the difference between two LDIF files.
+// Package ldifdiff finds and outputs the difference between two LDIF files.
 package ldifdiff
 
 import (
