@@ -50,30 +50,30 @@ var testActionEntryTestData = testGetActionEntryMap()
 type TestActionEntryData struct {
 	Add, Delete, Modify, ModifyOnlyAdd,
 	ModifyOnlyDelete, ModifyOnlyReplace,
-	ModifyNone, ModifyReplaceAttributes ActionEntry
+	ModifyNone, ModifyReplaceAttributes actionEntry
 }
 
 func testGetActionEntryMap() TestActionEntryData {
 	return TestActionEntryData{
-		Add: ActionEntry{Dn: testDn, Action: Add,
-			SubActionAttrs: []SubActionAttr{{None: testAttrList}}},
-		Delete: ActionEntry{Dn: testDn, Action: Delete,
-			SubActionAttrs: []SubActionAttr{{None: testAttrList}}},
-		Modify: ActionEntry{Dn: testDn, Action: Modify,
-			SubActionAttrs: []SubActionAttr{
-				{ModifyAdd: testAttrList},
-				{ModifyDelete: testAttrList},
-				{ModifyReplace: testAttrListModifyReplace}}},
-		ModifyOnlyAdd: ActionEntry{Dn: testDn, Action: Modify,
-			SubActionAttrs: []SubActionAttr{{ModifyAdd: testAttrList}}},
-		ModifyOnlyDelete: ActionEntry{Dn: testDn, Action: Modify,
-			SubActionAttrs: []SubActionAttr{{ModifyDelete: testAttrList}}},
-		ModifyOnlyReplace: ActionEntry{Dn: testDn, Action: Modify,
-			SubActionAttrs: []SubActionAttr{{ModifyReplace: testAttrListModifyReplace}}},
-		ModifyNone: ActionEntry{Dn: testDn, Action: Modify,
-			SubActionAttrs: []SubActionAttr{{None: testAttrList}}},
-		ModifyReplaceAttributes: ActionEntry{Dn: testDn, Action: Modify,
-			SubActionAttrs: []SubActionAttr{{ModifyReplace: testAttrList}}},
+		Add: actionEntry{Dn: testDn, Action: actionAdd,
+			SubActionAttrs:  []subActionAttrs{{subActionNone: testAttrList}}},
+		Delete: actionEntry{Dn: testDn, Action: actionDelete,
+			SubActionAttrs:     []subActionAttrs{{subActionNone: testAttrList}}},
+		Modify: actionEntry{Dn: testDn, Action: actionModify,
+			SubActionAttrs: []subActionAttrs{
+				{subActionModifyAdd: testAttrList},
+				{subActionModifyDelete: testAttrList},
+				{subActionModifyReplace: testAttrListModifyReplace}}},
+		ModifyOnlyAdd: actionEntry{Dn: testDn, Action: actionModify,
+			SubActionAttrs:            []subActionAttrs{{subActionModifyAdd: testAttrList}}},
+		ModifyOnlyDelete: actionEntry{Dn: testDn, Action: actionModify,
+			SubActionAttrs:               []subActionAttrs{{subActionModifyDelete: testAttrList}}},
+		ModifyOnlyReplace: actionEntry{Dn: testDn, Action: actionModify,
+			SubActionAttrs:                []subActionAttrs{{subActionModifyReplace: testAttrListModifyReplace}}},
+		ModifyNone: actionEntry{Dn: testDn, Action: actionModify,
+			SubActionAttrs:         []subActionAttrs{{subActionNone: testAttrList}}},
+		ModifyReplaceAttributes: actionEntry{Dn: testDn, Action: actionModify,
+			SubActionAttrs:                      []subActionAttrs{{subActionModifyReplace: testAttrList}}},
 	}
 }
 

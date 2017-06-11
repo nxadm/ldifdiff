@@ -11,11 +11,11 @@ import (
 
 /* Package only functions */
 
-func convertLdifStr(ldifStr string, ignoreAttr []string) (Entries, error) {
+func convertLdifStr(ldifStr string, ignoreAttr []string) (entries, error) {
 	return importRecords(ldifStr, "", ignoreAttr)
 }
 
-func importLdifFile(file string, ignoreAttr []string) (Entries, error) {
+func importLdifFile(file string, ignoreAttr []string) (entries, error) {
 	entries, err := importRecords("", file, ignoreAttr)
 	if err != nil {
 		err = errors.New(err.Error() + " [" + file + "]")
@@ -66,7 +66,7 @@ func addLineToRecord(line *string, record *[]string, ignoreAttr []string, prevAt
 	return nil
 }
 
-func importRecords(ldifStr, file string, ignoreAttr []string) (Entries, error) {
+func importRecords(ldifStr, file string, ignoreAttr []string) (entries, error) {
 	var readErr, parseErr error
 	queue := make(chan []string, 10)
 	entries := make(map[string][]string)
@@ -156,7 +156,7 @@ func readStr(ldifStr string, ignoreAttr []string, queue chan<- []string, wg *syn
 	}
 }
 
-func parse(entries Entries, queue <-chan []string, wg *sync.WaitGroup, err *error) {
+func parse(entries entries, queue <-chan []string, wg *sync.WaitGroup, err *error) {
 	defer wg.Done()
 	for record := range queue {
 		dn := record[0] // Find dn, should be the first line

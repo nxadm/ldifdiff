@@ -48,7 +48,7 @@ func TestConvertLdifStrBig(t *testing.T) {
 }
 
 /* Helper test evaluation */
-func okLdifTests(t *testing.T, entries Entries, ignoreAttr []string, err error) {
+func okLdifTests(t *testing.T, entries entries, ignoreAttr []string, err error) {
 	if err != nil {
 		t.Error("Expected values, got error: ", err)
 	}

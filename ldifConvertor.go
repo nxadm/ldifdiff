@@ -7,16 +7,16 @@ import (
 	"sync"
 )
 
-func createModifyStr(actionEntry ActionEntry) (string, error) {
+func createModifyStr(actionEntry actionEntry) (string, error) {
 	var buffer bytes.Buffer
-	subActions := make(map[SubAction]string)
-	subActions[ModifyAdd] = "add"
-	subActions[ModifyDelete] = "delete"
-	subActions[ModifyReplace] = "replace"
+	subActions := make(map[subAction]string)
+	subActions[subActionModifyAdd] = "add"
+	subActions[subActionModifyDelete] = "delete"
+	subActions[subActionModifyReplace] = "replace"
 	for idx, subActionList := range actionEntry.SubActionAttrs {
 		for subAction, attrList := range subActionList {
-			if subAction == None {
-				return "", errors.New(("Invalid Subaction None for Action Modify"))
+			if subAction == subActionNone {
+				return "", errors.New(("Invalid Subaction subActionNone for action actionModify"))
 			}
 			for idxInner, attr := range attrList {
 				if idxInner != 0 || idx != 0 {
@@ -34,24 +34,24 @@ func createModifyStr(actionEntry ActionEntry) (string, error) {
 	return buffer.String(), nil
 }
 
-func writeLdif(queue <-chan ActionEntry, writer *bytes.Buffer, wg *sync.WaitGroup, err *error) {
+func writeLdif(queue <-chan actionEntry, writer *bytes.Buffer, wg *sync.WaitGroup, err *error) {
 	defer wg.Done()
 	for actionEntry := range queue {
 		if *err != nil {
 			continue
 		}
 		switch actionEntry.Action {
-		case Add:
+		case actionAdd:
 			writer.WriteString(actionEntry.Dn + "\n") //dn
 			writer.WriteString("changetype: add\n")
-			attrList := actionEntry.SubActionAttrs[0][None]
+			attrList := actionEntry.SubActionAttrs[0][subActionNone]
 			for _, attr := range attrList {
 				writer.WriteString(attr + "\n")
 			}
-		case Delete:
+		case actionDelete:
 			writer.WriteString(actionEntry.Dn + "\n") //dn
 			writer.WriteString("changetype: delete\n")
-		case Modify:
+		case actionModify:
 			writer.WriteString(actionEntry.Dn + "\n") //dn
 			writer.WriteString("changetype: modify\n")
 			modifyStr, modifyErr := createModifyStr(actionEntry)

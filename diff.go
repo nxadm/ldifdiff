@@ -12,7 +12,7 @@ const Version = "v0.1.0"
 const Author = "Claudio Ramirez <pub.claudio@gmail.com>"
 const Repo = "https://github.com/nxadm/ldifdiff"
 
-type fn func(string, []string) (Entries, error)
+type fn func(string, []string) (entries, error)
 
 var skipDnForDelete map[string]bool
 
@@ -83,19 +83,19 @@ func arraysEqual(a, b []string) bool {
 }
 
 // Ordering Logic:
-// Add: entries from source sorted S -> L. Otherwise is invalid.
+// actionAdd: entries from source sorted S -> L. Otherwise is invalid.
 // Remove: entries from target sorted L -> S. Otherwise is invalid.
-// Modify:
+// actionModify:
 // - Keep S ->  L ordering
 // - If only 1 instance of attribute with different value on source and target:
 // update. This way we don't break the applicable LDAP schema.
-// - extra attribute on source: add
+// - extra attribute on source: actionAdd
 // - extra attribute on target: delete
 
-func compare(source, target *Entries, dnList *[]string) (string, error) {
+func compare(source, target *entries, dnList *[]string) (string, error) {
 	var buffer bytes.Buffer
 	var err error
-	queue := make(chan ActionEntry, 10)
+	queue := make(chan actionEntry, 10)
 	var wg sync.WaitGroup
 
 	// Find the order in which operation must happen
@@ -120,8 +120,8 @@ func compare(source, target *Entries, dnList *[]string) (string, error) {
 	close(queue)
 
 	// Free some memory
-	*source = Entries{}
-	*target = Entries{}
+	*source = entries{}
+	*target = entries{}
 
 	// Wait for the creation of the LDIF
 	wg.Wait()
@@ -141,17 +141,17 @@ func compare(source, target *Entries, dnList *[]string) (string, error) {
 
 func genericDiff(sourceParam, targetParam string, ignoreAttr []string, fn fn, dnList *[]string) (string, error) {
 	// Read the files in memory as a Map with sorted attributes
-	var source, target Entries
+	var source, target entries
 	var sourceErr, targetErr error
 	var wg sync.WaitGroup
 	wg.Add(2)
-	go func(entries *Entries, wg *sync.WaitGroup, err *error) {
+	go func(entries *entries, wg *sync.WaitGroup, err *error) {
 		result, e := fn(sourceParam, ignoreAttr)
 		*entries = result
 		*err = e
 		wg.Done()
 	}(&source, &wg, &sourceErr)
-	go func(entries *Entries, wg *sync.WaitGroup, err *error) {
+	go func(entries *entries, wg *sync.WaitGroup, err *error) {
 		result, e := fn(targetParam, ignoreAttr)
 		*entries = result
 		*err = e
@@ -172,8 +172,8 @@ func genericDiff(sourceParam, targetParam string, ignoreAttr []string, fn fn, dn
 
 func sendForAddition(
 	orderedSourceShortToLong *[]string,
-	source, target *Entries,
-	queue chan<- ActionEntry,
+	source, target *entries,
+	queue chan<- actionEntry,
 	dnList *[]string) {
 	for _, dn := range *orderedSourceShortToLong {
 		// Ignore equal entries
@@ -185,17 +185,17 @@ func sendForAddition(
 		// Mark entries for addition if only on source
 		if _, ok := (*target)[dn]; !ok {
 			if dnList == nil {
-				subActionAttr := make(map[SubAction][]string)
-				subActionAttr[None] = (*source)[dn]
+				subActionAttr := make(map[subAction][]string)
+				subActionAttr[subActionNone] = (*source)[dn]
 				actionEntry :=
-					ActionEntry{
+					actionEntry{
 						Dn:             dn,
-						Action:         Add,
-						SubActionAttrs: []SubActionAttr{subActionAttr},
+						Action:         actionAdd,
+						SubActionAttrs: []subActionAttrs{subActionAttr},
 					}
 				queue <- actionEntry
 			} else {
-				// Always add (attributes not relevant)
+				// Always actionAdd (attributes not relevant)
 				*dnList = append(*dnList, dn)
 			}
 			delete(*source, dn)
@@ -208,8 +208,8 @@ func sendForAddition(
 
 func sendForDeletion(
 	orderedTargetLongToShort *[]string,
-	source, target *Entries,
-	queue chan<- ActionEntry,
+	source, target *entries,
+	queue chan<- actionEntry,
 	dnList *[]string) {
 	for _, dn := range *orderedTargetLongToShort {
 		if skipDnForDelete[dn] { // We know it's not a delete operation
@@ -218,13 +218,13 @@ func sendForDeletion(
 		if _, ok := (*target)[dn]; ok { // It has not been deleted above
 			if _, ok := (*source)[dn]; !ok { // does not exists on source
 				if dnList == nil {
-					subActionAttr := make(map[SubAction][]string)
-					subActionAttr[None] = nil
+					subActionAttr := make(map[subAction][]string)
+					subActionAttr[subActionNone] = nil
 					actionEntry :=
-						ActionEntry{
+						actionEntry{
 							Dn:             dn,
-							Action:         Delete,
-							SubActionAttrs: []SubActionAttr{subActionAttr},
+							Action:         actionDelete,
+							SubActionAttrs: []subActionAttrs{subActionAttr},
 						}
 					queue <- actionEntry
 				} else {
@@ -244,8 +244,8 @@ func sendForDeletion(
 
 func sendForModification(
 	orderedSourceShortToLong *[]string, source,
-	target *Entries,
-	queue chan<- ActionEntry,
+	target *entries,
+	queue chan<- actionEntry,
 	dnList *[]string) {
 	for _, dn := range *orderedSourceShortToLong {
 		// DN is present on source and target:
@@ -275,9 +275,9 @@ func sendForModification(
 					if _, ok := targetAttr[attr]; !ok {
 						// Is the attribute name (not value) unique?
 						switch uniqueAttrName(attr, sourceAttr, targetAttr) {
-						case true: // This is a Modify-Replace operation
+						case true: // This is a actionModify-Replace operation
 							attrToModifyReplace = append(attrToModifyReplace, attr)
-						case false: // This is just a Modify Add (only on source).
+						case false: // This is just a actionModify actionAdd (only on source).
 							attrToModifyAdd = append(attrToModifyAdd, attr)
 						}
 					}
@@ -294,17 +294,17 @@ func sendForModification(
 				}
 
 				// Send it
-				actionEntry := ActionEntry{Dn: dn, Action: Modify}
-				subActionAttrArray := []SubActionAttr{}
+				actionEntry := actionEntry{Dn: dn, Action: actionModify}
+				subActionAttrArray := []subActionAttrs{}
 				switch {
 				case len(attrToModifyAdd) > 0:
-					subActionAttrArray = append(subActionAttrArray, SubActionAttr{ModifyAdd: attrToModifyAdd})
+					subActionAttrArray = append(subActionAttrArray, subActionAttrs{subActionModifyAdd: attrToModifyAdd})
 					fallthrough
 				case len(attrToModifyDelete) > 0:
-					subActionAttrArray = append(subActionAttrArray, SubActionAttr{ModifyDelete: attrToModifyDelete})
+					subActionAttrArray = append(subActionAttrArray, subActionAttrs{subActionModifyDelete: attrToModifyDelete})
 					fallthrough
 				case len(attrToModifyReplace) > 0:
-					subActionAttrArray = append(subActionAttrArray, SubActionAttr{ModifyReplace: attrToModifyReplace})
+					subActionAttrArray = append(subActionAttrArray, subActionAttrs{subActionModifyReplace: attrToModifyReplace})
 				}
 
 				actionEntry.SubActionAttrs = subActionAttrArray
@@ -322,7 +322,7 @@ func sendForModification(
 	}
 }
 
-func sortDnByDepth(entries *Entries, longToShort bool) []string {
+func sortDnByDepth(entries *entries, longToShort bool) []string {
 	var sorted []string
 
 	dns := []string{}

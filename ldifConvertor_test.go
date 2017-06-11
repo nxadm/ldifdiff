@@ -26,7 +26,7 @@ func TestCreateModifyStr(t *testing.T) {
 	// Errors
 	_, err := createModifyStr(testActionEntryTestData.ModifyNone)
 	if err == nil {
-		t.Error("Invalid Subaction None for Action Modify")
+		t.Error("Invalid Subaction subActionNone for action actionModify")
 	}
 }
 
@@ -34,9 +34,9 @@ func TestWriteLdif(t *testing.T) {
 	var buffer bytes.Buffer
 	var wg sync.WaitGroup
 	var err error
-	queue := make(chan ActionEntry)
+	queue := make(chan actionEntry)
 	wg.Add(2)
-	go func(queue chan ActionEntry) {
+	go func(queue chan actionEntry) {
 		queue <- testActionEntryTestData.Add
 		queue <- testActionEntryTestData.Delete
 		queue <- testActionEntryTestData.Modify
@@ -60,11 +60,11 @@ func TestWriteLdifError(t *testing.T) {
 	var buffer bytes.Buffer
 	var wg sync.WaitGroup
 	var err error
-	queue := make(chan ActionEntry)
+	queue := make(chan actionEntry)
 	wg.Add(2)
-	go func(queue chan ActionEntry) {
-		actionEntry := ActionEntry{Dn: testDn, Action: 100,
-			SubActionAttrs: []SubActionAttr{{None: testAttrList}}}
+	go func(queue chan actionEntry) {
+		actionEntry := actionEntry{Dn: testDn, Action: 100,
+			SubActionAttrs:            []subActionAttrs{{subActionNone: testAttrList}}}
 		queue <- actionEntry
 		close(queue)
 		wg.Done()
@@ -74,6 +74,6 @@ func TestWriteLdifError(t *testing.T) {
 	wg.Wait()
 
 	if err == nil {
-		t.Error("Error expected for invalid Action")
+		t.Error("Error expected for invalid action")
 	}
 }

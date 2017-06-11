@@ -1,38 +1,38 @@
 package ldifdiff
 
 /* Types */
-// Each Dn has an Action (Add, Delete, Modify) and a set of subctions applied
+// Each Dn has an action (actionAdd, actionDelete, actionModify) and a set of subctions applied
 // on the associated attributes;
-// - Action Add and Delete have no Subactions (typed as 1 Subaction None) and
-// are expected to have only 1 set of attributes. Add will add the Dn with the
-// supplied attributes, while Delete will remove the Dn completely (supplied
+// - action actionAdd and actionDelete have no Subactions (typed as 1 Subaction subActionNone) and
+// are expected to have only 1 set of attributes. actionAdd will actionAdd the Dn with the
+// supplied attributes, while actionDelete will remove the Dn completely (supplied
 // attributes are ignored).
-// - Action Modify is more complex and has 3 types of Subactions (ModifyAdd,
-// ModifyDelete and ModifyUpdate). A Dn with a Modify Action can have multiple
+// - action actionModify is more complex and has 3 types of Subactions (subActionModifyAdd,
+// subActionModifyDelete and ModifyUpdate). A Dn with a actionModify action can have multiple
 // combinations of SubActions and associated attributes. In the case of the
-// SubAction ModifyUpdate only 1 attribute is expected (rfc2849). This is done
+// subAction ModifyUpdate only 1 attribute is expected (rfc2849). This is done
 // in order to respect possible schema restrictions.
 
-type Action int
-type SubAction int
-type SubActionAttr map[SubAction][]string
-type ActionEntry struct {
+type action int
+type subAction int
+type subActionAttrs map[subAction][]string
+type actionEntry struct {
 	Dn             string
-	Action         Action
-	SubActionAttrs []SubActionAttr
+	Action         action
+	SubActionAttrs []subActionAttrs
 }
 
 // Return map with dn as key and attribute array as value
-type Entries map[string][]string
+type entries map[string][]string
 
 const (
-	Add Action = iota
-	Delete
-	Modify
+	actionAdd    action = iota
+	actionDelete
+	actionModify
 )
 const (
-	ModifyAdd SubAction = iota
-	ModifyDelete
-	ModifyReplace
-	None
+	subActionModifyAdd     subAction = iota
+	subActionModifyDelete
+	subActionModifyReplace
+	subActionNone
 )
