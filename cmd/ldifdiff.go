@@ -14,12 +14,12 @@
 //-d, --dn
 //  Only print DNs instead of a full LDIF.
 //-i <attributes>, --ignore <attributes>
-//  Comma separated attribute list.
+//  Comma separated attribute list to be ignored.
 //  Multiple instances of this switch are allowed.
 //-h, --help
 //  Show this screen.
 //-v, --version
-//  Show version
+//  Show version.
 package main
 
 import (
@@ -53,7 +53,7 @@ Options:
   -d, --dn
     Only print DNs instead of a full LDIF.
   -i <attributes>, --ignore <attributes>
-	Comma separated attribute list.
+	Comma separated attribute list to be ignored.
 	Multiple instances of this switch are allowed.
   -h, --help
   	Show this screen.
