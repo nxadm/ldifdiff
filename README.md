@@ -1,5 +1,5 @@
 # ldifdiff
-ldiffdiff is a fast Go (golang) library and executable that outputs the 
+ldiffdiff is a fast Go (golang) library and executable that outputs the
 difference between two LDIF files (LDAP). Binaries of the command implementation
 are provided under [releases](https://github.com/nxadm/ldifdiff/releases).
 
@@ -86,3 +86,4 @@ targetFileStr) and outputs the differences as a list of affected DNs
 (Dintinguished Names). An array of attributes can be supplied. These
 attributes will be ignored when comparing the LDIF strings. The output
 is a string slice. In case of failure, an error is provided.
+
