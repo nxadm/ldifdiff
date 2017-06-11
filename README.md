@@ -6,6 +6,7 @@ provided under [releases](https://github.com/nxadm/ldifdiff/releases).
 
 [![Build Status](https://travis-ci.org/nxadm/ldifdiff.svg?branch=master)](https://travis-ci.org/nxadm/ldifdiff)
 [![GoDoc](https://godoc.org/github.com/nxadm/ldifdiff?status.svg)](https://godoc.org/github.com/nxadm/ldifdiff)
+[![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](http://www.gnu.org/licenses/lgpl-3.0)
 
 ## Usage of the ldifdiff command
 ```
