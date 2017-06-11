@@ -48,7 +48,7 @@ Compile the ldiff cmd implementation:
 
 ## API ##
 
-The API is simple and provides for functions.
+The API is simple and provides four functions.
 
 ```func Diff(sourceStr, targetStr string, ignoreAttr []string) (string, error)```
 
