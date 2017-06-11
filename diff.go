@@ -8,8 +8,11 @@ import (
 	"sync"
 )
 
+// Used by the implementation program in the cmd directory.
 const Version = "v0.1.0"
+// Used by the implementation program in the cmd directory.
 const Author = "Claudio Ramirez <pub.claudio@gmail.com>"
+// Used by the implementation program in the cmd directory.
 const Repo = "https://github.com/nxadm/ldifdiff"
 
 type fn func(string, []string) (entries, error)
