@@ -1,0 +1,7 @@
+language: go
+go:
+  - 1.8.x
+  - 1.7.x
+  - 1.6.x  
+  - 1.5.x  
+script: go test -v && cd cmd && go build ldifdiff.go
