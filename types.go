@@ -3,15 +3,15 @@ package ldifdiff
 /* Types */
 // Each Dn has an action (actionAdd, actionDelete, actionModify) and a set of subctions applied
 // on the associated attributes;
-// - action actionAdd and actionDelete have no Subactions (typed as 1 Subaction subActionNone) and
-// are expected to have only 1 set of attributes. actionAdd will actionAdd the Dn with the
-// supplied attributes, while actionDelete will remove the Dn completely (supplied
+// - action actionAdd and actionDelete have no subactions (typed as 1 subaction subActionNone) and
+// are expected to have only 1 set of attributes. actionAdd will add the Dn with the
+// supplied attributes, while actionDelete will delete the Dn completely (supplied
 // attributes are ignored).
-// - action actionModify is more complex and has 3 types of Subactions (subActionModifyAdd,
-// subActionModifyDelete and ModifyUpdate). A Dn with a actionModify action can have multiple
-// combinations of SubActions and associated attributes. In the case of the
-// subAction ModifyUpdate only 1 attribute is expected (rfc2849). This is done
-// in order to respect possible schema restrictions.
+// - action actionModify is more complex and has 3 types of subactions (subActionModifyAdd,
+// subActionModifyDelete and subActionModifyUpdate). A Dn with a actionModify action can have 
+// multiple combinations of subActions and associated attributes. In the case of the
+// subAction ModifyUpdate, the attribute must be unique in order to to respect possible 
+// schema restrictions (rfc2849).
 
 type action int
 type subAction int
