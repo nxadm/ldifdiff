@@ -1,9 +1,8 @@
 # ldifdiff
 ldiffdiff is a fast Go (golang) library and executable that output the
-difference between two LDIF files as a valid and importable LDIF for 
-your LDAP server. Binaries of the command implementation are provided 
-under [releases](https://github.com/nxadm/ldifdiff/releases).
-
+difference between two LDIF files as a valid and importable LDIF (e.g.
+by your LDAP server). Binaries of the command implementation are 
+provided under [releases](https://github.com/nxadm/ldifdiff/releases).
 
 [![Build Status](https://travis-ci.org/nxadm/ldifdiff.svg?branch=master)](https://travis-ci.org/nxadm/ldifdiff)
 [![GoDoc](https://godoc.org/github.com/nxadm/ldifdiff?status.svg)](https://godoc.org/github.com/nxadm/ldifdiff)
