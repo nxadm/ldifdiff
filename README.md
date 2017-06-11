@@ -33,7 +33,7 @@ Options:
   -h, --help
   	Show this screen.
   -v, --version
-  	Show version
+  	Show version.
 ```
 
 ## Installation
