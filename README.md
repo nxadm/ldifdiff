@@ -5,6 +5,7 @@ are provided under [releases](https://github.com/nxadm/ldifdiff/releases).
 
 
 [![Build Status](https://travis-ci.org/nxadm/ldifdiff.svg?branch=master)](https://travis-ci.org/nxadm/ldifdiff)
+[![GoDoc](https://godoc.org/github.com/nxadm/ldifdiff?status.svg)](https://godoc.org/github.com/nxadm/ldifdiff)
 
 ## Usage of the ldifdiff command
 ```
