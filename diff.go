@@ -28,7 +28,7 @@ var skipDnForDelete map[string]bool
 // attributes will be ignored when comparing the LDIF strings.
 // The output is a string, a valid LDIF, and can be added to the "target"
 // database (the one that created targetStr) in order to make it
-// equal to the *source* database (the one that created sourceStr). In case of
+// equal to the "source" database (the one that created sourceStr). In case of
 // failure, an error is provided.
 func Diff(sourceStr, targetStr string, ignoreAttr []string) (string, error) {
 	return genericDiff(sourceStr, targetStr, ignoreAttr, convertLdifStr, nil)
@@ -39,7 +39,7 @@ func Diff(sourceStr, targetStr string, ignoreAttr []string) (string, error) {
 // supplied. These attributes will be ignored when comparing the LDIF strings.
 // The output is a string, a valid LDIF, and can be added to the "target"
 // database (the one that created targetFile) in order to make it equal to the
-// *source* database (the one that created sourceFile). In case of failure, an
+// "source" database (the one that created sourceFile). In case of failure, an
 // error is provided.
 func DiffFromFiles(sourceFile, targetFile string, ignoreAttr []string) (string, error) {
 	return genericDiff(sourceFile, targetFile, ignoreAttr, importLdifFile, nil)
