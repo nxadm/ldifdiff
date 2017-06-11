@@ -28,12 +28,12 @@ Options:
   -d, --dn
     Only print DNs instead of a full LDIF.
   -i <attributes>, --ignore <attributes>
-	Comma separated attribute list.
-	Multiple instances of this switch are allowed.
+    Comma separated attribute list.
+    Multiple instances of this switch are allowed.
   -h, --help
-  	Show this screen.
+    Show this screen.
   -v, --version
-  	Show version.
+    Show version.
 ```
 
 ## Installation
