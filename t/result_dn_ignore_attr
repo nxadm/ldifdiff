@@ -1,0 +1,9 @@
+dn: only_on_source,ou=aAccounts,dc=domain,dc=ext
+dn: only_on_source_several_attr,ou=aAccounts,dc=domain,dc=ext
+dn: dn_on_ou_only_on_target,ou=target,ou=aAccounts,dc=domain,dc=ext
+dn: ou_only_on_target,ou=target,ou=aAccounts,dc=domain,dc=ext
+dn: only_on_target,ou=aAccounts,dc=domain,dc=ext
+dn: only_on_target_several_attr,ou=aAccounts,dc=domain,dc=ext
+dn: mixed,ou=aAccounts,dc=domain,dc=ext
+dn: modifyAddRemoveReplace,ou=aAccounts,dc=domain,dc=ext
+dn: several_attr_only_on_source,ou=aAccounts,dc=domain,dc=ext

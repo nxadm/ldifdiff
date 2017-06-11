@@ -1,0 +1,24 @@
+dn: some_dn,ou=aAccounts,dc=domain,dc=ext
+changetype: add
+mail: auth2@domain.ext
+phone: +32364564645
+
+dn: some_dn,ou=aAccounts,dc=domain,dc=ext
+changetype: delete
+
+dn: some_dn,ou=aAccounts,dc=domain,dc=ext
+changetype: modify
+add: mail
+mail: auth2@domain.ext
+-
+add: phone
+phone: +32364564645
+-
+delete: mail
+mail: auth2@domain.ext
+-
+delete: phone
+phone: +32364564645
+-
+replace: mail
+mail: auth2@domain.ext

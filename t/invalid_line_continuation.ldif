@@ -1,0 +1,30 @@
+# A comment
+dn: auth1,ou=aAccounts,dc=domain,dc=ext
+sambaSID: A samba id something
+eduPersonEntitlement: urn:mace:domain.ext:en
+ titlement:someEntitlement
+eduPersonEntitlement: urn:mace:domain.ext:entitlement:AnOther
+uid: auth1
+sn: auth1
+cn: auth1
+mail: auth1@domain.ext
+userPassword:: YVZlcnlTYWZlUGFzc3dvcmQK
+pwdChangedTime: 20151124010006Z
+someBase64Attr:: IUOYOUHLKHBhlhlbhqsboylbqsydblqysdblqbydslqsydblqysdblyqsbdlbyqbldsyqbldysblqydsblqysdlbqysdblqysdlbqysdblqysbdl
+
+ This is invalid
+dn: blah
+
+# Other comment
+dn: auth2,ou=aAccounts,dc=domain,dc=ext
+sambaSID: An other samba id something
+eduPersonEntitlement: urn:mace:domain.ext:otherEnt
+ itlement:someEntitlement
+eduPersonEntitlement: urn:mace:domain.ext:entitlement:AnOther2
+uid: auth2
+sn: auth2
+cn: auth2
+mail: auth2@domain.ext
+userPassword:: WW91SGF2ZVRvb011Y2hUaW1lRGVjcnlwdGluZ1RoaXMK
+pwdChangedTime: 20151224010007Z
+# END

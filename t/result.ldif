@@ -1,0 +1,96 @@
+dn: only_on_source,ou=aAccounts,dc=domain,dc=ext
+changetype: add
+sambaSID: An other samba id something
+
+dn: only_on_source_several_attr,ou=aAccounts,dc=domain,dc=ext
+changetype: add
+mail: auth2@domain.ext
+sambaSID: An other samba id something
+
+dn: dn_on_ou_only_on_target,ou=target,ou=aAccounts,dc=domain,dc=ext
+changetype: delete
+
+dn: ou_only_on_target,ou=target,ou=aAccounts,dc=domain,dc=ext
+changetype: delete
+
+dn: only_on_target,ou=aAccounts,dc=domain,dc=ext
+changetype: delete
+
+dn: only_on_target_several_attr,ou=aAccounts,dc=domain,dc=ext
+changetype: delete
+
+dn: mixed,ou=aAccounts,dc=domain,dc=ext
+changetype: modify
+add: mail
+mail: auth2@domain.ext
+-
+add: phone
+phone: +32364564645
+-
+delete: eduPersonEntitlement
+eduPersonEntitlement: urn:mace:domain.ext:entitlement:AnOther2
+-
+delete: eduPersonEntitlement
+eduPersonEntitlement: urn:mace:domain.ext:entitlement:AnOther3
+-
+delete: fax
+fax: +532434344354
+
+dn: modifyAddRemoveReplace,ou=aAccounts,dc=domain,dc=ext
+changetype: modify
+add: beeper
+beeper: +35434354354
+-
+add: mail
+mail: auth2@domain.ext
+-
+delete: phone
+phone: +32364564645
+-
+replace: fax
+fax: +35434354355
+-
+replace: sambaSID
+sambaSID: on source
+
+dn: only_1_mvattr_on_source,ou=aAccounts,dc=domain,dc=ext
+changetype: modify
+replace: eduPersonEntitlement
+eduPersonEntitlement: urn:mace:domain.ext:entitlement:someEntitlement
+
+dn: only_1_mvattr_on_target,ou=aAccounts,dc=domain,dc=ext
+changetype: modify
+delete: eduPersonEntitlement
+eduPersonEntitlement: urn:mace:domain.ext:entitlement:AnOthe2r
+
+dn: only_attr_on_source,ou=aAccounts,dc=domain,dc=ext
+changetype: modify
+add: mail
+mail: auth2@domain.ext
+
+dn: only_attr_on_target,ou=aAccounts,dc=domain,dc=ext
+changetype: modify
+delete: mail
+mail: auth2@domain.ext
+
+dn: several_attr_only_on_source,ou=aAccounts,dc=domain,dc=ext
+changetype: modify
+add: beeper
+beeper: +35434354354
+-
+add: fax
+fax: +532434344354
+-
+add: phone
+phone: +32364564645
+-
+replace: eduPersonEntitlement
+eduPersonEntitlement: urn:mace:domain.ext:entitlement:AnOther
+
+dn: several_attr_only_on_target,ou=aAccounts,dc=domain,dc=ext
+changetype: modify
+delete: eduPersonEntitlement
+eduPersonEntitlement: urn:mace:domain.ext:entitlement:AnOther2
+-
+delete: eduPersonEntitlement
+eduPersonEntitlement: urn:mace:domain.ext:entitlement:AnOther3

@@ -1,0 +1,68 @@
+# LDIF ends with an empty line
+# A comment
+dn: identical,ou=aAccounts,dc=domain,dc=ext
+sambaSID: A samba id something
+eduPersonEntitlement: urn:mace:domain.ext:en
+ titlement:someEntitlement
+eduPersonEntitlement: urn:mace:domain.ext:entitlement:AnOther
+uid: auth1
+sn: auth1
+cn: auth1
+mail: auth1@domain.ext
+userPassword:: YVZlcnlTYWZlUGFzc3dvcmQK
+pwdChangedTime: 20151124010006Z
+someBase64Attr:: IUOYOUHLKHBhlhlbhqsboylbqsydblqysdblqbydslqsydblqysdblyqsbdlbyqbldsyqbldysblqydsblqysdlbqysdblqysdlbqysdblqysbdl
+
+# Other comment
+dn: only_on_source,ou=aAccounts,dc=domain,dc=ext
+sambaSID: An other samba id something
+
+dn: only_on_source_several_attr,ou=aAccounts,dc=domain,dc=ext
+sambaSID: An other samba id something
+mail: auth2@domain.ext
+
+dn: only_attr_on_source,ou=aAccounts,dc=domain,dc=ext
+sambaSID: An other samba id something
+mail: auth2@domain.ext
+
+dn: only_attr_on_target,ou=aAccounts,dc=domain,dc=ext
+sambaSID: An other samba id something
+
+dn: only_1_mvattr_on_source,ou=aAccounts,dc=domain,dc=ext
+sambaSID: An other samba id something
+mail: auth2@domain.ext
+eduPersonEntitlement: urn:mace:domain.ext:entitlement:someEntitlement
+
+dn: only_1_mvattr_on_target,ou=aAccounts,dc=domain,dc=ext
+sambaSID: An other samba id something
+mail: auth2@domain.ext
+eduPersonEntitlement: urn:mace:domain.ext:entitlement:AnOther
+
+dn: several_attr_only_on_source,ou=aAccounts,dc=domain,dc=ext
+sambaSID: several_attr_on_source
+mail: auth2@domain.ext
+phone: +32364564645
+fax: +532434344354
+beeper: +35434354354
+eduPersonEntitlement: urn:mace:domain.ext:entitlement:AnOther
+
+dn: several_attr_only_on_target,ou=aAccounts,dc=domain,dc=ext
+sambaSID: several_attr_on_source
+mail: auth2@domain.ext
+phone: +32364564645
+fax: +532434344354
+beeper: +35434354354
+eduPersonEntitlement: urn:mace:domain.ext:entitlement:AnOther
+
+dn: mixed,ou=aAccounts,dc=domain,dc=ext
+sambaSID: several_attr_on_source
+mail: auth2@domain.ext
+phone: +32364564645
+beeper: +35434354354
+eduPersonEntitlement: urn:mace:domain.ext:entitlement:AnOther
+
+dn: modifyAddRemoveReplace,ou=aAccounts,dc=domain,dc=ext
+sambaSID: on source
+mail: auth2@domain.ext
+beeper: +35434354354
+fax: +35434354355
