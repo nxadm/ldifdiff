@@ -1,4 +1,6 @@
-// Package ldifdiff finds and outputs the difference between two LDIF files.
+// Package ldifdiff is a fast library that outputs the difference 
+// between two LDIF files as a valid and importable LDIF (e.g. 
+// by your LDAP server).
 package ldifdiff
 
 import (
