@@ -57,9 +57,9 @@ The API is simple and provides four functions.
 Diff compares two LDIF strings (sourceStr and targetStr) and outputs the
 differences as a LDIF string. An array of attributes can be supplied.
 These attributes will be ignored when comparing the LDIF strings. The
-output is a string, a valid LDIF, and can be added to the "target"
+output is a string, a valid LDIF, and can be added to the _target_
 database (the one that created targetStr) in order to make it equal to
-the *source* database (the one that created sourceStr). In case of
+the _source_ database (the one that created sourceStr). In case of
 failure, an error is provided.
 
 
@@ -69,8 +69,8 @@ DiffFromFiles compares two LDIF files (sourceFile and targetFile) and
 outputs the differences as a LDIF string. An array of attributes can be
 supplied. These attributes will be ignored when comparing the LDIF
 strings. The output is a string, a valid LDIF, and can be added to the
-"target" database (the one that created targetFile) in order to make it
-equal to the *source* database (the one that created sourceFile). In
+_target_ database (the one that created targetFile) in order to make it
+equal to the _source_ database (the one that created sourceFile). In
 case of failure, an error is provided.
 
 ```func ListDiffDn(sourceStr, targetStr string, ignoreAttr []string) ([]string, error)```
