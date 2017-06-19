@@ -11,7 +11,7 @@ import (
 )
 
 // Used by the implementation program in the cmd directory.
-const Version = "v0.1.0"
+const Version = "v0.2.0"
 // Used by the implementation program in the cmd directory.
 const Author = "Claudio Ramirez <pub.claudio@gmail.com>"
 // Used by the implementation program in the cmd directory.
