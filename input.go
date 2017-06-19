@@ -117,6 +117,8 @@ func readFile(file string, ignoreAttr []string, queue chan<- []string, wg *sync.
 			if strings.HasPrefix(line, "version: ") {
 				firstLine = false
 				continue
+			} else if line == "" {
+				continue
 			}
 			firstLine = false
 		}
@@ -158,9 +160,7 @@ func readStr(ldifStr string, ignoreAttr []string, queue chan<- []string, wg *syn
 				continue
 			}
 
-			// Check if first "record" is a "version: *" line and skip it
-			// TODO: version and dn on some record
-			if idx == 0 {
+			if idx == 0 { // First record only
 				if strings.HasPrefix(line, "version: ") {
 					continue
 				}

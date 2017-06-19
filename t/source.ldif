@@ -1,5 +1,5 @@
-# LDIF ends with an empty line
-# A comment
+version: 1
+
 dn: identical,ou=aAccounts,dc=domain,dc=ext
 sambaSID: A samba id something
 eduPersonEntitlement: urn:mace:domain.ext:en
