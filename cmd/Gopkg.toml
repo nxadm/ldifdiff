@@ -64,9 +64,7 @@ ignored = ["github.com/nxadm/ldifdiff"]
 ## what source location any dependent projects specify.
 # source = "https://github.com/myfork/package.git"
 
-
-
 [[constraint]]
-  branch = "master"
   name = "github.com/docopt/docopt-go"
+  version = "0.6.2"
 
