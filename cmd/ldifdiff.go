@@ -24,7 +24,7 @@ package main
 
 import (
 	"fmt"
-	docopt "github.com/docopt/docopt-go"
+	"github.com/docopt/docopt-go"
 	"github.com/nxadm/ldifdiff"
 	"os"
 	"strings"
