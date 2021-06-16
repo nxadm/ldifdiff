@@ -5,6 +5,11 @@ package ldifdiff
 
 /* Public functions */
 
+// FromLDIF is a method that imports an LDIF string or file into an Entry.
+func (entries *Entries) FromLDIF(inputType inputType) error {
+	return nil
+}
+
 // ToLDIF is a method that converts a *DiffResult into a LDIF usable
 // by ldapmodify.
 func (diff *DiffResult) ToLDIF() string {
@@ -13,27 +18,24 @@ func (diff *DiffResult) ToLDIF() string {
 
 // CompareEntries compares two Entries and returns the results as a DiffResult
 // and an error if applicable. If attributes are supplied, they will be ignored
-// in the comparison. If filter is set to true, these attributes will
-// not be part of the DiffResult.
-func CompareEntries(source, target Entries, attr []string, filter bool) (DiffResult, error) {
+// in the comparison. In case of failure, an error is provided.
+func CompareEntries(source, target Entries, attr []string) (DiffResult, error) {
 	return nil, nil
 }
 
 // Diff compares a LDIF string with all the supplied targets. A list is returned
 // where each element is a ModifyLDIF for the specific target. If attributes are
-// supplied, they will be ignored in the comparison. If filter is set to true,
-// these attributes will not be part of the ModifyLDIF. In case of failure, an
+// supplied, they will be ignored in the comparison. In case of failure, an
 // error is provided.
-func Diff(source string, targets []string, attr []string, filter bool) ([]ModifyLDIF, error) {
+func Diff(source string, targets []string, attr []string) ([]ModifyLDIF, error) {
 	return nil, nil
 }
 
-// DiffFromFiles compares a LDIF file with all the supplied targets. A list is returned
-// where each element is a ModifyLDIF for the specific target. If attributes are
-// supplied, they will be ignored in the comparison. If filter is set to true,
-// these attributes will not be part of the ModifyLDIF. In case of failure, an
-// error is provided.
-func DiffFromFiles(source string, targets []string, attr []string, filter bool) ([]ModifyLDIF, error) {
+// DiffFromFiles compares a LDIF file with all the supplied targets. A list is
+// returned where each element is a ModifyLDIF for the specific target. If
+// attributes are supplied, they will be ignored in the comparison. In case
+// of failure, an error is provided.
+func DiffFromFiles(source string, targets []string, attr []string) ([]ModifyLDIF, error) {
 	return nil, nil
 }
 
@@ -52,6 +54,7 @@ func ListDiffDn(source string, targets []string, attr []string) ([]DN, error) {
 func ListDiffDnFromFiles(source string, targets []string, attr []string) ([]DN, error) {
 	return nil, nil
 }
+
 //
 //func diff(inputType inputType, source, targets, ignoreAttr []string) ([]string, error) {
 //	//var (

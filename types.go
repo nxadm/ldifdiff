@@ -26,7 +26,9 @@ type (
 
 // Entries corresponds with the structured contents of an LDIF file or string.
 // The Attribute list is ordered as found in the LDIF.
-type Entries map[DN][]Attribute
+type Entries struct {
+	DNInfo map[DN][]Attribute
+}
 
 // DiffResult corresponds with the structured result of an LDIF comparison.
 type DiffResult []DNAction
@@ -66,8 +68,9 @@ const (
 )
 
 /* Internal types */
+type inputType int
 const (
 	// Clarify the input type
-	inputStr int = iota
+	inputStr inputType = iota
 	inputFile
 )
