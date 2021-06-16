@@ -1,38 +1,73 @@
 package ldifdiff
 
-/* Types */
-// Each Dn has an action (actionAdd, actionDelete, actionModify) and a set of subctions applied
-// on the associated attributes;
-// - action actionAdd and actionDelete have no subactions (typed as 1 subaction subActionNone) and
-// are expected to have only 1 set of attributes. actionAdd will add the Dn with the
-// supplied attributes, while actionDelete will delete the Dn completely (supplied
-// attributes are ignored).
-// - action actionModify is more complex and has 3 types of subactions (subActionModifyAdd,
-// subActionModifyDelete and subActionModifyUpdate). A Dn with a actionModify action can have 
-// multiple combinations of subActions and associated attributes. In the case of the
-// subAction ModifyUpdate, the attribute must be unique in order to to respect possible 
-// schema restrictions (rfc2849).
+/* API types */
+type (
+	// ErrReadLDIF corresponds with an error encountered while reading a LDIF file.
+	ErrReadLDIF error
 
-type action int
-type subAction int
-type subActionAttrs map[subAction][]string
-type actionEntry struct {
-	Dn             string
-	Action         action
-	SubActionAttrs []subActionAttrs
+	// ErrParseLDIF corresponds with an error encountered while parsing LDIF contents.
+	ErrParseLDIF error
+
+	// ModifyLDIF corresponds with the results of a LDIF comparison in a string
+	// format usable by ldapmodify.
+	ModifyLDIF string
+
+	// DN corresponds with the Distinguished name of an LDIF entry.
+	DN string
+
+	// Action corresponds with the action that needs to be applied to a DN
+	// in the target LDIF to match the source.
+	Action int
+
+	// ModifyType corresponds with the Modify type that needs to be applied
+	// to an attribute of a DN in the target LDIF to match the source.
+	ModifyType int
+)
+
+// Entries corresponds with the structured contents of an LDIF file or string.
+// The Attribute list is ordered as found in the LDIF.
+type Entries map[DN][]Attribute
+
+// DiffResult corresponds with the structured result of an LDIF comparison.
+type DiffResult []DNAction
+
+// DNAction hold the action to be done to a DN.
+type DNAction struct {
+	DN         string
+	Attributes []Attribute
+	Action
 }
 
-// Return map with dn as key and attribute array as value
-type entries map[string][]string
+// Attribute corresponds with an attribute of a DN
+type Attribute struct {
+	Name   string
+	Value  string
+	Base64 bool
+}
 
+// AttributeAction corresponds holds the information needed to modify attributes.
+type AttributeAction struct {
+	Attribute
+	ModifyType
+}
+
+// Action constants
 const (
-	actionAdd    action = iota
-	actionDelete
-	actionModify
+	Add Action = iota
+	Delete
+	Modify
 )
+
+// Modify constants
 const (
-	subActionModifyAdd     subAction = iota
-	subActionModifyDelete
-	subActionModifyReplace
-	subActionNone
+	ModifyAdd ModifyType = iota
+	ModifyDelete
+	ModifyReplace
+)
+
+/* Internal types */
+const (
+	// Clarify the input type
+	inputStr int = iota
+	inputFile
 )
