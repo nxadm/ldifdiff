@@ -1,0 +1,7 @@
+add: mail
+mail: me@example.com
+-
+replace: address
+address: the sun
+-
+delete: phone

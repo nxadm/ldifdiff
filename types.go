@@ -35,9 +35,9 @@ type DiffResult []DNAction
 
 // DNAction hold the action to be done to a DN.
 type DNAction struct {
-	DN         string
-	Attributes []Attribute
+	DN string
 	Action
+	Attributes []Attribute
 }
 
 // Attribute corresponds with an attribute of a DN
@@ -45,6 +45,7 @@ type Attribute struct {
 	Name   string
 	Value  string
 	Base64 bool
+	ModifyType
 }
 
 // AttributeAction corresponds holds the information needed to modify attributes.
@@ -55,20 +56,23 @@ type AttributeAction struct {
 
 // Action constants
 const (
-	Add Action = iota
+	None Action = iota
+	Add
 	Delete
 	Modify
 )
 
 // Modify constants
 const (
-	ModifyAdd ModifyType = iota
+	ModifyNone ModifyType = iota
+	ModifyAdd
 	ModifyDelete
 	ModifyReplace
 )
 
 /* Internal types */
 type inputType int
+
 const (
 	// Clarify the input type
 	inputStr inputType = iota

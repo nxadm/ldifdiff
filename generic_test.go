@@ -20,7 +20,7 @@ package ldifdiff
 //const testSourceLdifFileBig = "t/_source_big.ldif"
 //const testTargetLdifFileBig = "t/_target_big.ldif"
 //const testResultLdifFileBig = "t/_result_big.ldif"
-//const testModifyAddLdifFile = "t/modifyAdd.ldif"
+//const testModifyAddLdifFile = "t/old_modifyAdd.ldif"
 //const testModifyDeleteLdifFile = "t/modifyDelete.ldif"
 //const testModifyReplaceLdifFile = "t/modifyReplace.ldif"
 //const testModifyLdifFile = "t/Modify.ldif"

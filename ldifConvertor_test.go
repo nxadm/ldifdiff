@@ -1,4 +1,5 @@
 package ldifdiff
+
 //
 //import (
 //	"bytes"
@@ -44,7 +45,7 @@ package ldifdiff
 //		wg.Done()
 //	}(queue)
 //
-//	go writeLdif(queue, &buffer, &wg, &err)
+//	go createLDIF(queue, &buffer, &wg, &err)
 //	wg.Wait()
 //
 //	if err != nil {
@@ -70,7 +71,7 @@ package ldifdiff
 //		wg.Done()
 //	}(queue)
 //
-//	go writeLdif(queue, &buffer, &wg, &err)
+//	go createLDIF(queue, &buffer, &wg, &err)
 //	wg.Wait()
 //
 //	if err == nil {

@@ -1,4 +1,5 @@
 package ldifdiff
+
 //
 //import (
 //	"bytes"
@@ -35,7 +36,7 @@ package ldifdiff
 //	return buffer.String(), nil
 //}
 //
-//func writeLdif(queue <-chan actionEntry, writer *bytes.Buffer, wg *sync.WaitGroup, err *error) {
+//func createLDIF(queue <-chan actionEntry, writer *bytes.Buffer, wg *sync.WaitGroup, err *error) {
 //	defer wg.Done()
 //	for actionEntry := range queue {
 //		if *err != nil {

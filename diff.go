@@ -5,13 +5,12 @@ package ldifdiff
 
 /* Public functions */
 
-// FromLDIF is a method that imports an LDIF string or file into an Entry.
-func (entries *Entries) FromLDIF(inputType inputType) error {
+// FromLDIF is a method that imports a LDIF string or file into an Entry.
+func (entries *Entries) FromLDIF(inputType inputType, source string) error {
 	return nil
 }
 
-// ToLDIF is a method that converts a *DiffResult into a LDIF usable
-// by ldapmodify.
+// ToLDIF is a method that converts a DiffResult into a LDIF usable by ldapmodify.
 func (diff *DiffResult) ToLDIF() string {
 	return ""
 }
@@ -174,7 +173,7 @@ func ListDiffDnFromFiles(source string, targets []string, attr []string) ([]DN, 
 //
 //	// Write the file concurrently
 //	wg.Add(1) // 1 writer
-//	go writeLdif(queue, &buffer, &wg, &err)
+//	go createLDIF(queue, &buffer, &wg, &err)
 //
 //	// Dn only on source + removal of identical entries
 //	skipDnForDelete = make(map[string]bool) // Keep track of dn to skip at Deletion
@@ -239,7 +238,7 @@ func ListDiffDnFromFiles(source string, targets []string, attr []string) ([]DN, 
 //			}
 //			Delete(*source, dn)
 //		}
-//		// Implict else:
+//		// Implicit else:
 //		// It exists on target and it's not equal, so it's a modifyStr
 //		skipDnForDelete[dn] = true
 //	}
@@ -272,7 +271,7 @@ func ListDiffDnFromFiles(source string, targets []string, attr []string) ([]DN, 
 //				}
 //				Delete(*target, dn)
 //			}
-//			// Implict else:
+//			// Implicit else:
 //			// It exists on source and it's not equal (tested on sendForAddition),
 //			// so it's a modifyStr
 //		}
