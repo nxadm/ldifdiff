@@ -1,0 +1,18 @@
+dn: uid=foo,ou=bar,dc=example,dc=com
+changetype: modify
+add: mail
+mail: me@example.com
+-
+replace: address
+address: the sun
+-
+delete: phone
+
+dn: uid=foo2,ou=bar,dc=example,dc=com
+changetype: add
+mail: me2@example.com
+address: the moon
+
+dn: uid=foo3,ou=bar,dc=example,dc=com
+changetype: delete
+
