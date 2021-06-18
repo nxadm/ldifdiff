@@ -1,13 +1,40 @@
 package ldifdiff
 
-//
-//import (
-//	"os"
-//	"strconv"
-//	"strings"
-//	"testing"
-//)
-//
+import (
+	"bytes"
+	"io/ioutil"
+	"testing"
+
+	"github.com/stretchr/testify/assert"
+)
+
+func TestReadIntoChan(t *testing.T) {
+	expectedBytes, _ := ioutil.ReadFile("t/modify.ldif")
+
+	// String source
+	input, err := readIntoChan(inputStr, string(expectedBytes))
+	assert.NoError(t, err)
+
+	var buffer bytes.Buffer
+
+	for line := range input {
+		buffer.WriteString(line)
+	}
+
+	assert.Equal(t, string(expectedBytes), buffer.String())
+
+	// File source
+	input, err = readIntoChan(inputFile, "t/modify.ldif")
+	assert.NoError(t, err)
+	buffer.Reset()
+
+	for line := range input {
+		buffer.WriteString(line)
+	}
+
+	assert.Equal(t, string(expectedBytes), buffer.String())
+}
+
 //func TestImportLdifFile(t *testing.T) {
 //
 //	entries, err := importLdifFile(testSourceLdifFile, testIgnoreAttr)

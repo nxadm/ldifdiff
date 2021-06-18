@@ -3,16 +3,68 @@
 // by your LDAP server).
 package ldifdiff
 
+import "sync"
+
+//Info base 64
+//It is legal to base64-encode any value when representing it in LDIF,
+//but any value that meets any of the following conditions is required
+//to be base64 encoded for use in LDIF:
+//
+//Any value that begins with a space.
+//Any value that begins with a colon.
+//Any value that begins with a less-than character.
+//Any value that includes a carriage-return or line-break character.
+//Any value that includes the ASCII null character.
+//Any value that contains non-ASCII data.
+//
+//Although it is not absolutely required, it is strongly recommended that
+//values that end with a space should also be base64 encoded. It is also
+//strongly recommended that values containing ASCII control characters
+//(e.g., tabs, backspace, etc.) be base64 encoded.
+
 /* Public functions */
 
-// FromLDIF is a method that imports a LDIF string or file into an Entry.
-func (entries *Entries) FromLDIF(inputType inputType, source string) error {
-	return nil
-}
+//// Diff is a higher level function that compares a LDIF string with all the
+//// supplied targets. A list is returned where each element is a ModifyLDIF
+//// for the specific target. If attributes are supplied, they will be ignored
+//// in the comparison. In case of failure, an error is provided.
+//func Diff(source string, targets []string, attr []string) ([]ModifyLDIF, error) {
+//	return nil, nil
+//}
+//
+//// DiffFromFiles compares a LDIF file with all the supplied targets. A list is
+//// returned where each element is a ModifyLDIF for the specific target. If
+//// attributes are supplied, they will be ignored in the comparison. In case
+//// of failure, an error is provided.
+//func DiffFromFiles(source string, targets []string, attr []string) ([]ModifyLDIF, error) {
+//	return nil, nil
+//}
+//
+//// ListDiffDn compares a LDIF string with all the supplied targets. It outputs the
+//// differences as a list of affected DNs (Dintinguished Names). If attributes
+//// are supplied, they will be ignored in the comparison. In case of failure, an
+//// error is provided.
+//func ListDiffDn(source string, targets []string, attr []string) ([]DN, error) {
+//	return nil, nil
+//}
+//
+//// ListDiffDnFromFiles compares a LDIF file with all the supplied targets. It
+//// outputs the differences as a list of affected DNs (Dintinguished Names). If
+//// attributes are supplied, they will be ignored in the comparison. In case of
+//// failure, an error is provided.
+//func ListDiffDnFromFiles(source string, targets []string, attr []string) ([]DN, error) {
+//	return nil, nil
+//}
 
-// ToLDIF is a method that converts a DiffResult into a LDIF usable by ldapmodify.
-func (diff *DiffResult) ToLDIF() string {
-	return ""
+// ImportLDIF imports the contents of an LDIF file in a structured Entries that can be
+// compared.
+func ImportLDIF(in inputType, source string, ignoreAttr []string) (*Entries, error) {
+	//input, err := readIntoChan(in, source)
+	//if err != nil {
+	//	return nil, err
+	//}
+
+	return nil, nil
 }
 
 // CompareEntries compares two Entries and returns the results as a DiffResult
@@ -22,36 +74,18 @@ func CompareEntries(source, target Entries, attr []string) (DiffResult, error) {
 	return nil, nil
 }
 
-// Diff compares a LDIF string with all the supplied targets. A list is returned
-// where each element is a ModifyLDIF for the specific target. If attributes are
-// supplied, they will be ignored in the comparison. In case of failure, an
-// error is provided.
-func Diff(source string, targets []string, attr []string) ([]ModifyLDIF, error) {
-	return nil, nil
-}
+// DiffToLDIF is a low level functions that converts a channel of DNAction
+// into a channel of strings that create an LDIF, usable by ldapmodify.
+// This allows to use (e.g. printing) the results as they come in.
+func DiffToLDIF(input <-chan DNAction) chan string {
+	wg := &sync.WaitGroup{}
+	output := make(chan string, 10)
 
-// DiffFromFiles compares a LDIF file with all the supplied targets. A list is
-// returned where each element is a ModifyLDIF for the specific target. If
-// attributes are supplied, they will be ignored in the comparison. In case
-// of failure, an error is provided.
-func DiffFromFiles(source string, targets []string, attr []string) ([]ModifyLDIF, error) {
-	return nil, nil
-}
+	wg.Add(1)
 
-// ListDiffDn compares a LDIF string with all the supplied targets. It outputs the
-// differences as a list of affected DNs (Dintinguished Names). If attributes
-// are supplied, they will be ignored in the comparison. In case of failure, an
-// error is provided.
-func ListDiffDn(source string, targets []string, attr []string) ([]DN, error) {
-	return nil, nil
-}
+	go createLDIF(input, output, wg)
 
-// ListDiffDnFromFiles compares a LDIF file with all the supplied targets. It
-// outputs the differences as a list of affected DNs (Dintinguished Names). If
-// attributes are supplied, they will be ignored in the comparison. In case of
-// failure, an error is provided.
-func ListDiffDnFromFiles(source string, targets []string, attr []string) ([]DN, error) {
-	return nil, nil
+	return output
 }
 
 //

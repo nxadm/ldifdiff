@@ -1,5 +1,36 @@
 package ldifdiff
 
+import (
+	"bytes"
+	"io/ioutil"
+	"testing"
+
+	"github.com/stretchr/testify/assert"
+)
+
+// func (diff *DiffResult) ToLDIF() <-chan string {
+func TestDiffResultToLDIF(t *testing.T) {
+	dnActions := testReturnDNActions()
+	input := make(chan DNAction, (len(testReturnDNActions())))
+
+	for _, dnAction := range dnActions {
+		input <- dnAction
+	}
+
+	close(input)
+
+	output := DiffToLDIF(input)
+
+	var buffer bytes.Buffer
+
+	for line := range output {
+		buffer.WriteString(line)
+	}
+
+	expectedBytes, _ := ioutil.ReadFile("t/modify.ldif")
+	assert.Equal(t, string(expectedBytes), buffer.String())
+}
+
 //
 //import (
 //	"os"

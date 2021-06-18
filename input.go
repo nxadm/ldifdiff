@@ -1,18 +1,54 @@
 package ldifdiff
 
-//
-//import (
-//	"errors"
-//	"strings"
-//	"sync"
-//)
-//
+import (
+	"bufio"
+	"os"
+	"strings"
+)
+
+// readIntoChan reads a string or file and send each line into a channel
+func readIntoChan(in inputType, source string) (<-chan string, error) {
+	var (
+		err ErrReadLDIF
+		fh  *os.File
+	)
+
+	input := make(chan string, 10)
+
+	if in == inputFile {
+		fh, err = os.Open(source)
+		if err != nil {
+			return input, err
+		}
+	}
+
+	go func(fh *os.File) {
+		// Split string
+		if in == inputStr {
+			for _, line := range strings.SplitAfter(source, "\n") {
+				input <- strings.TrimSuffix(line, "\r")
+			}
+		} else { // file
+			defer fh.Close()
+
+			scanner := bufio.NewScanner(fh)
+			for scanner.Scan() {
+				input <- scanner.Text() + "\n"
+			}
+		}
+
+		close(input)
+	}(fh)
+
+	return input, err
+}
+
 //func importRecords(inputType inputType, source string, ignoreAttr []string) (Entries, error) {
 //	var (
 //		//entries  Entries
-//		readErr  error
+//		readErr error
 //		//parseErr error
-//		wg       sync.WaitGroup
+//		wg sync.WaitGroup
 //	)
 //
 //	queue := make(chan []string, 10)
@@ -25,7 +61,7 @@ package ldifdiff
 //	case inputStr: // it's a ldifStr
 //		go readStr(source, ignoreAttr, queue, &wg, &readErr)
 //	default: // it's a file
-//		//go readFile(source, ignoreAttr, queue, &wg, &readErr)
+//		go readFile(source, ignoreAttr, queue, &wg, &readErr)
 //	}
 //
 //	//go parse(entries, queue, &wg, &parseErr)
@@ -44,20 +80,19 @@ package ldifdiff
 //	//}
 //	return Entries{}, nil
 //}
-//////
-///////* Package only functions */
-//////
-//////func convertLdifStr(ldifStr string, ignoreAttr []string) (entries, error) {
-//////	return importRecords(ldifStr, "", ignoreAttr)
-//////}
-//////
-//////func importLdifFile(file string, ignoreAttr []string) (entries, error) {
-//////	entries, err := importRecords("", file, ignoreAttr)
-//////	if err != nil {
-//////		err = errors.New(err.Error() + " [" + file + "]")
-//////	}
-//////	return entries, err
-//////}
+//
+//func convertLdifStr(ldifStr string, ignoreAttr []string) (entries, error) {
+//	return importRecords(ldifStr, "", ignoreAttr)
+//}
+//
+//func importLdifFile(file string, ignoreAttr []string) (entries, error) {
+//	entries, err := importRecords("", file, ignoreAttr)
+//	if err != nil {
+//		err = errors.New(err.Error() + " [" + file + "]")
+//	}
+//	return entries, err
+//}
+//
 //////
 ///////* Internal functions */
 //////
@@ -96,64 +131,64 @@ package ldifdiff
 //
 //	return nil
 //}
-////
-////func readFile(file string, ignoreAttr []string, queue chan<- []string, wg *sync.WaitGroup, err *error) {
-////	defer wg.Done()
-////	defer close(queue)
-////	fh, osErr := os.Open(file)
-////	if osErr != nil {
-////		*err = osErr
-////		return
-////	}
-////	defer fh.Close()
-////
-////	record := []string{}
-////	scanner := bufio.NewScanner(fh)
-////	var prevAttrSkipped bool // use to skip continuation lines of skipped attr
-////	firstLine := true
-////	for scanner.Scan() {
-////
-////		line := scanner.Text()
-////
-////		// Skip comments
-////		if strings.HasPrefix(line, "#") {
-////			continue
-////		}
-////
-////		// Check if first line is a "version: *" line and skip it
-////		if firstLine {
-////			if strings.HasPrefix(line, "version: ") {
-////				firstLine = false
-////				continue
-////			} else if line == "" {
-////				continue
-////			}
-////			firstLine = false
-////		}
-////
-////		// Import lines as records
-////		*err = addLineToRecord(&line, &record, ignoreAttr, &prevAttrSkipped)
-////		if *err != nil {
-////			return
-////		}
-////
-////		//  Dispatch the record to buffer & reset record
-////		if len(line) == 0 && len(record) != 0 {
-////			queue <- record
-////			record = []string{}
-////		}
-////	}
-////
-////	// Last record may be a leftover (no empty line)
-////	if len(record) != 0 {
-////		queue <- record
-////	}
-////
-////	if *err == nil {
-////		*err = scanner.Err()
-////	}
-////}
-////
+//
+//func readFile(file string, ignoreAttr []string, queue chan<- []string, wg *sync.WaitGroup, err *error) {
+//	defer wg.Done()
+//	defer close(queue)
+//	fh, osErr := os.Open(file)
+//	if osErr != nil {
+//		*err = osErr
+//		return
+//	}
+//	defer fh.Close()
+//
+//	record := []string{}
+//	scanner := bufio.NewScanner(fh)
+//	var prevAttrSkipped bool // use to skip continuation lines of skipped attr
+//	firstLine := true
+//	for scanner.Scan() {
+//
+//		line := scanner.Text()
+//
+//		// Skip comments
+//		if strings.HasPrefix(line, "#") {
+//			continue
+//		}
+//
+//		// Check if first line is a "version: *" line and skip it
+//		if firstLine {
+//			if strings.HasPrefix(line, "version: ") {
+//				firstLine = false
+//				continue
+//			} else if line == "" {
+//				continue
+//			}
+//			firstLine = false
+//		}
+//
+//		// Import lines as records
+//		*err = addLineToRecord(&line, &record, ignoreAttr, &prevAttrSkipped)
+//		if *err != nil {
+//			return
+//		}
+//
+//		//  Dispatch the record to buffer & reset record
+//		if len(line) == 0 && len(record) != 0 {
+//			queue <- record
+//			record = []string{}
+//		}
+//	}
+//
+//	// Last record may be a leftover (no empty line)
+//	if len(record) != 0 {
+//		queue <- record
+//	}
+//
+//	if *err == nil {
+//		*err = scanner.Err()
+//	}
+//}
+//
 //func readStr(source string, ignoreAttr []string, queue chan<- []string, wg *sync.WaitGroup, err *error) {
 //	defer wg.Done()
 //	defer close(queue)
@@ -162,7 +197,7 @@ package ldifdiff
 //	for idx, recordStr := range strings.Split(source, "\n\n") {
 //		var (
 //			prevAttrSkipped bool
-//			record []string
+//			record          []string
 //		)
 //
 //		for _, line := range strings.Split(recordStr, "\n") {
@@ -193,19 +228,19 @@ package ldifdiff
 //		}
 //	}
 //}
-////
-////func parse(entries Entries, queue <-chan []string, wg *sync.WaitGroup, err *error) {
-////	defer wg.Done()
-////	for record := range queue {
-////		dn := record[0] // Find dn, should be the first line
-////		if !strings.HasPrefix(dn, "dn:") {
-////			*err = errors.New("No dn could be retrieved")
-////			continue
-////		}
-////
-////		// Sort the entries
-////		attr := record[1:]
-////		sort.Strings(attr)
-////		entries[dn] = attr
-////	}
-////}
+//
+//func parse(entries Entries, queue <-chan []string, wg *sync.WaitGroup, err *error) {
+//	defer wg.Done()
+//	for record := range queue {
+//		dn := record[0] // Find dn, should be the first line
+//		if !strings.HasPrefix(dn, "dn:") {
+//			*err = errors.New("No dn could be retrieved")
+//			continue
+//		}
+//
+//		// Sort the entries
+//		attr := record[1:]
+//		sort.Strings(attr)
+//		entries[dn] = attr
+//	}
+//}
