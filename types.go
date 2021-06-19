@@ -24,11 +24,8 @@ type (
 	ModifyType int
 )
 
-// Entries corresponds with the structured contents of an LDIF file or string.
-// The Attribute list is ordered as found in the LDIF.
-type Entries struct {
-	DNInfo map[DN][]Attribute
-}
+// DNInfo corresponds with the structured contents of an LDIF file or string.
+type DNInfo map[DN][]Attribute
 
 // DiffResult corresponds with the structured result of an LDIF comparison.
 type DiffResult []DNAction

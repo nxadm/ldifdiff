@@ -2,17 +2,19 @@ package ldifdiff
 
 import (
 	"bytes"
+	"fmt"
 	"io/ioutil"
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
-func TestReadIntoChan(t *testing.T) {
+func TestReadLDIF(t *testing.T) {
 	expectedBytes, _ := ioutil.ReadFile("t/modify.ldif")
 
 	// String source
-	input, err := readIntoChan(inputStr, string(expectedBytes))
+	input, err := readLDIF(inputStr, string(expectedBytes))
 	assert.NoError(t, err)
 
 	var buffer bytes.Buffer
@@ -24,7 +26,7 @@ func TestReadIntoChan(t *testing.T) {
 	assert.Equal(t, string(expectedBytes), buffer.String())
 
 	// File source
-	input, err = readIntoChan(inputFile, "t/modify.ldif")
+	input, err = readLDIF(inputFile, "t/modify.ldif")
 	assert.NoError(t, err)
 	buffer.Reset()
 
@@ -33,6 +35,13 @@ func TestReadIntoChan(t *testing.T) {
 	}
 
 	assert.Equal(t, string(expectedBytes), buffer.String())
+}
+
+func TestParseLDIF(t *testing.T) {
+	dnInfos := parseLDIF(testReturnLDIFChannel())
+
+	fmt.Printf("%#v\n", dnInfos)
+
 }
 
 //func TestImportLdifFile(t *testing.T) {
@@ -124,3 +133,17 @@ func TestReadIntoChan(t *testing.T) {
 //		t.Error("Error expected (no dn), but none received")
 //	}
 //}
+
+func testReturnLDIFChannel() chan string {
+	expectedBytes, _ := ioutil.ReadFile("t/modify.ldif")
+	lines := strings.SplitAfter(string(expectedBytes), "\n")
+	input := make(chan string, len(lines))
+
+	for _, line := range lines {
+		input <- line
+	}
+
+	close(input)
+
+	return input
+}

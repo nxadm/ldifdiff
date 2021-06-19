@@ -58,8 +58,8 @@ import "sync"
 
 // ImportLDIF imports the contents of an LDIF file in a structured Entries that can be
 // compared.
-func ImportLDIF(in inputType, source string, ignoreAttr []string) (*Entries, error) {
-	//input, err := readIntoChan(in, source)
+func ImportLDIF(in inputType, source string, ignoreAttr []string) (DNInfo, error) {
+	//input, err := readLDIF(in, source)
 	//if err != nil {
 	//	return nil, err
 	//}
@@ -70,7 +70,7 @@ func ImportLDIF(in inputType, source string, ignoreAttr []string) (*Entries, err
 // CompareEntries compares two Entries and returns the results as a DiffResult
 // and an error if applicable. If attributes are supplied, they will be ignored
 // in the comparison. In case of failure, an error is provided.
-func CompareEntries(source, target Entries, attr []string) (DiffResult, error) {
+func CompareEntries(source, target DNInfo, attr []string) (DiffResult, error) {
 	return nil, nil
 }
 

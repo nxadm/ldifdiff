@@ -2,12 +2,13 @@ package ldifdiff
 
 import (
 	"bufio"
+	"fmt"
 	"os"
 	"strings"
 )
 
-// readIntoChan reads a string or file and send each line into a channel
-func readIntoChan(in inputType, source string) (<-chan string, error) {
+// readLDIF reads a string or file and send each line into a channel
+func readLDIF(in inputType, source string) (<-chan string, error) {
 	var (
 		err ErrReadLDIF
 		fh  *os.File
@@ -18,7 +19,7 @@ func readIntoChan(in inputType, source string) (<-chan string, error) {
 	if in == inputFile {
 		fh, err = os.Open(source)
 		if err != nil {
-			return input, err
+			return input, fmt.Errorf("%w", err)
 		}
 	}
 
@@ -41,6 +42,95 @@ func readIntoChan(in inputType, source string) (<-chan string, error) {
 	}(fh)
 
 	return input, err
+}
+
+func parseLDIF(input <-chan string, attr []string) []DNInfo {
+	var (
+		dnInfos       []DNInfo
+		record        []string
+		firstLineSeen bool
+	)
+
+	for line := range input {
+		if strings.HasPrefix(line, "#") { // Skip comments
+			continue
+		}
+
+		if !firstLineSeen { // Skip LDIF version entry
+			firstLineSeen = true
+
+			if strings.HasPrefix(line, "version: ") {
+				continue
+			}
+		}
+
+		if line == "\n" { // Parse record
+			dnInfos = append(dnInfos, importRecord(record, attr))
+			record = nil // reset
+		}
+
+		if strings.HasPrefix(line, " ") { // Append continuation lines to previous line
+			prevLine := record[len(record)-1]
+			record[len(record)-1] = strings.TrimSuffix(prevLine, "\n") + strings.TrimPrefix(line, " ")
+		}
+
+		record = append(record, line)
+	}
+
+	if record != nil { // Send leftovers
+		dnInfos = append(dnInfos, importRecord(record, attr))
+	}
+
+	return dnInfos
+}
+
+func importRecord(record []string, attr []string) DNInfo {
+	dnInfo := make(map[DN][]Attribute)
+
+	var dn string
+
+	for _, line := range record {
+		if line == "\n" {
+			continue
+		}
+
+		var (
+			base64 bool
+			key string
+			value string
+		)
+
+		parts := strings.Split(line, ":: ")
+		if len(parts) == 1 {
+			base64 = true
+		} else {
+			parts = strings.Split(line, ": ")
+		}
+
+		key = strings.TrimSpace(parts[0])
+
+		switch base64 {
+		case true:
+			value = strings.Join(parts[1:], ":: ")
+		default:
+			value = strings.Join(parts[1:], ": ")
+		}
+
+
+		if key == "dn") {
+			dn = key
+		}
+
+		//		for _, attrName := range ignoreAttr {
+		//			if strings.HasPrefix(*line, attrName+":") {
+		//				*prevAttrSkipped = true
+		//				return nil
+		//			}
+		//		}
+		//		*record = append(*record, *line)
+		//		*prevAttrSkipped = false
+	}
+	return nil
 }
 
 //func importRecords(inputType inputType, source string, ignoreAttr []string) (Entries, error) {
